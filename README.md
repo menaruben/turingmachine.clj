@@ -12,7 +12,7 @@ You can find the examples [here](./src/examples/).
 
 (ns turingmachine)
 
-;; turingmachine which accepts the language {0^2 1^n | n > 0}
+;; turingmachine which accepts the language {0^2 1^n | n >= 0}
 ;; <=> the language of all binary strings with 00 as the prefix
 (def t1 (Transition. :q1 "0" :q3 "0" :right))
 (def t2 (Transition. :q3 "0" :q2 "0" :right))
