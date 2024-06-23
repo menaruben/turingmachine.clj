@@ -35,8 +35,8 @@
                             (- headPosition 1))]
         (execute-transitions newTape transitions newHeadPosition (:destination transition) blank-symbol))))))
 
-(defn emulate-utm [utm tape]
-  (let [result (execute-transitions tape (:transitions utm) 0 (:initial-state utm) (:blank-symbol utm))]
+(defn emulate-utm [utm word]
+  (let [result (execute-transitions word (:transitions utm) 0 (:initial-state utm) (:blank-symbol utm))]
     (if (contains? (set (:accepted-states utm)) (:currentState result))
-      {:input tape :output (:tape result) :endState (:currentState result) :verdict :accepted}
-      {:input tape :output (:tape result) :endState (:currentState result) :verdict :rejected})))
+      {:input word :output (:tape result) :endState (:currentState result) :verdict :accepted}
+      {:input word :output (:tape result) :endState (:currentState result) :verdict :rejected})))
