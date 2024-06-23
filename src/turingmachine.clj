@@ -22,19 +22,18 @@
     (= headPosition (count tape)) {:currentState currentState :tape tape}
 
     :else (let [
-    readSymbol (str (nth tape headPosition))
-    transition (find-transition currentState readSymbol transitions)]
+      readSymbol (str (nth tape headPosition))
+      transition (find-transition currentState readSymbol transitions)]
 
     ;; (print-transition transition) ;; uncomment if you like to print each transition :)
     (cond (nil? transition) {:currentState currentState :tape tape}
 
-      :else (
-        let [
-          newTape (write-tape tape headPosition (:writes transition) blank-symbol)
-          newHeadPosition (if (= (:direction transition) :right)
-                              (+ headPosition 1)
-                              (- headPosition 1))]
-            (execute-transitions newTape transitions newHeadPosition (:destination transition) blank-symbol))))))
+      :else (let [
+        newTape (write-tape tape headPosition (:writes transition) blank-symbol)
+        newHeadPosition (if (= (:direction transition) :right)
+                            (+ headPosition 1)
+                            (- headPosition 1))]
+        (execute-transitions newTape transitions newHeadPosition (:destination transition) blank-symbol))))))
 
 (defn emulate-utm [utm tape]
   (let [result (execute-transitions tape (:transitions utm) 0 (:initial-state utm) (:blank-symbol utm))]
