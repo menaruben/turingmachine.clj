@@ -12,7 +12,7 @@
 (def input-symbols (list "0" "1" "_"))
 (def tape-symbols (list "0" "1" "_"))
 (def accepted-states (list :q2))
-(def utm (UniversalTuringmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
+(def utm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
 
 (def inputs (list "00111111" "0111" "00"))
 (doseq [input inputs] (println (emulate-utm utm input)))

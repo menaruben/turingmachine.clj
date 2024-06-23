@@ -1,7 +1,7 @@
 (ns turingmachine)
 
 (defrecord Transition [source reads destination writes direction])
-(defrecord UniversalTuringmachine [states input-symbols tape-symbols transitions initial-state blank-symbol accepted-states])
+(defrecord Turingmachine [states input-symbols tape-symbols transitions initial-state blank-symbol accepted-states])
 
 (defn find-transition [source readSymbol transitions]
   (first (filter #(and (= (:source %) source) (= (:reads %) readSymbol)) transitions)))
