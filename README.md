@@ -59,21 +59,22 @@ You can find the examples [here](./src/test/tuma/).
   (:import [main.tuma.transition Transition])
   (:import [main.tuma.turingmachine Turingmachine]))
 
-;; turingmachine which inverts the input word, which must be of length 1 atleast
-(def t1 (Transition. :q1 "_" :q1 "_" :right))
-(def t2 (Transition. :q1 "0" :q2 "1" :right))
-(def t3 (Transition. :q1 "1" :q2 "0" :right))
-(def t4 (Transition. :q2 "0" :q2 "1" :right))
-(def t5 (Transition. :q2 "1" :q2 "0" :right))
+(defn -main []
+  (def t1 (Transition. :q1 "_" :q1 "_" :right))
+  (def t2 (Transition. :q1 "0" :q2 "1" :right))
+  (def t3 (Transition. :q1 "1" :q2 "0" :right))
+  (def t4 (Transition. :q2 "0" :q2 "1" :right))
+  (def t5 (Transition. :q2 "1" :q2 "0" :right))
 
-(def transitions (list t1 t2 t3 t4 t5))
-(def states (list :q1 :q2))
-(def input-symbols (list "0" "1" "_"))
-(def tape-symbols (list "0" "1" "_"))
-(def accepted-states (list :q2))
-(def tm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
-(def inputs (list "000" "111" "10111011" "0" "1" "" "abc" "___110001"))
-(doseq [input inputs] (println (tm/emulate-tm tm input)))
+  (def transitions [t1 t2 t3 t4 t5])
+  (def states [:q1 :q2])
+  (def input-symbols ["0" "1" "_"])
+  (def tape-symbols ["0" "1" "_"])
+  (def accepted-states [:q2])
+
+  (def tm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
+  (def inputs ["000" "111" "10111011" "0" "1" "" "abc" "___110001"])
+  (doseq [input inputs] (println (tm/emulate-tm tm input))))
 ```
 ```clojure
 {:input 000, :output 111, :endState :q2, :verdict :accepted}
@@ -81,7 +82,7 @@ You can find the examples [here](./src/test/tuma/).
 {:input 10111011, :output 01000100, :endState :q2, :verdict :accepted}
 {:input 0, :output 1, :endState :q2, :verdict :accepted}
 {:input 1, :output 0, :endState :q2, :verdict :accepted}
-{:input , :output , :endState :q1, :verdict :rejected}
+{:input , :output :word, :endState :q1, :verdict :rejected}
 {:input abc, :output abc, :endState :q1, :verdict :rejected}
 {:input ___110001, :output ___001110, :endState :q2, :verdict :accepted}
 ```
@@ -94,20 +95,20 @@ You can find the examples [here](./src/test/tuma/).
   (:import [main.tuma.transition Transition])
   (:import [main.tuma.turingmachine Turingmachine]))
 
-;; turingmachine which accepts the language {0^2 1^n | n > 0}
-;; <=> the language of all binary strings with 00 as the prefix
-(def t1 (Transition. :q1 "0" :q3 "0" :right))
-(def t2 (Transition. :q3 "0" :q2 "0" :right))
-(def t3 (Transition. :q2 "1" :q2 "1" :right))
-(def transitions (list t1 t2 t3))
-(def states (list :q1 :q2 :q3))
-(def input-symbols (list "0" "1" "_"))
-(def tape-symbols (list "0" "1" "_"))
-(def accepted-states (list :q2))
-(def tm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
+(defn -main []
+  (def t1 (Transition. :q1 "0" :q3 "0" :right))
+  (def t2 (Transition. :q3 "0" :q2 "0" :right))
+  (def t3 (Transition. :q2 "1" :q2 "1" :right))
+  (def transitions [t1 t2 t3])
 
-(def inputs (list "00111111" "0111" "00"))
-(doseq [input inputs] (println (tm/emulate-tm tm input)))
+  (def states [:q1 :q2 :q3])
+  (def input-symbols ["0" "1" "_"])
+  (def tape-symbols ["0" "1" "_"])
+  (def accepted-states [:q2])
+
+  (def tm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
+  (def inputs ["00111111" "0111" "00"])
+  (doseq [input inputs] (println (tm/emulate-tm tm input))))
 ```
 ```clojure
 {:input 00111111, :output 00111111, :endState :q2, :verdict :accepted}
@@ -123,19 +124,20 @@ You can find the examples [here](./src/test/tuma/).
   (:import [main.tuma.transition Transition])
   (:import [main.tuma.turingmachine Turingmachine]))
 
-(def t1 (Transition. :q1 "1" :q3 "1" :left))
-(def t2 (Transition. :q1 "0" :q3 "0" :left))
-(def t3 (Transition. :q3 "_" :q2 "1" :left))
-(def transitions (list t1 t2 t3))
+(defn -main []
+  (def t1 (Transition. :q1 "1" :q3 "1" :left))
+  (def t2 (Transition. :q1 "0" :q3 "0" :left))
+  (def t3 (Transition. :q3 "_" :q2 "1" :left))
+  (def transitions [t1 t2 t3])
 
-(def states (list :q1 :q2 :q3))
-(def input-symbols (list "0" "1"))
-(def tape-symbols (list "0" "1" "_"))
-(def accepted-states (list :q2))
+  (def states [:q1 :q2 :q3])
+  (def input-symbols ["0" "1"])
+  (def tape-symbols ["0" "1" "_"])
+  (def accepted-states [:q2])
 
-(def tm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
-(def inputs (list "000" "111" "10111011" "0" "1"))
-(doseq [input inputs] (println (tm/emulate-tm tm input)))
+  (def tm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
+  (def inputs ["000" "111" "10111011" "0" "1"])
+  (doseq [input inputs] (println (tm/emulate-tm tm input))))
 ```
 ```clojure
 {:input 000, :output 1000, :endState :q2, :verdict :accepted}
@@ -153,20 +155,21 @@ You can find the examples [here](./src/test/tuma/).
   (:import [main.tuma.transition Transition])
   (:import [main.tuma.turingmachine Turingmachine]))
 
-(def t1 (Transition. :q1 "1" :q1 "1" :right))
-(def t2 (Transition. :q1 "0" :q1 "0" :right))
-(def t3 (Transition. :q1 "_" :q3 "_" :left))
-(def t4 (Transition. :q3 "0" :q2 "0" :right))
-(def transitions (list t1 t2 t3 t4))
+(defn -main []
+  (def t1 (Transition. :q1 "1" :q1 "1" :right))
+  (def t2 (Transition. :q1 "0" :q1 "0" :right))
+  (def t3 (Transition. :q1 "_" :q3 "_" :left))
+  (def t4 (Transition. :q3 "0" :q2 "0" :right))
+  (def transitions [t1 t2 t3 t4])
 
-(def states (list :q1 :q2 :q3))
-(def input-symbols (list "0" "1"))
-(def tape-symbols (list "0" "1" "_"))
-(def accepted-states (list :q2))
+  (def states [:q1 :q2 :q3])
+  (def input-symbols ["0" "1"])
+  (def tape-symbols ["0" "1" "_"])
+  (def accepted-states [:q2])
 
-(def tm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
-(def inputs (list "000" "111" "10111011" "0" "1"))
-(doseq [input inputs] (println (tm/emulate-tm tm input)))
+  (def tm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
+  (def inputs ["000" "111" "10111011" "0" "1"])
+  (doseq [input inputs] (println (tm/emulate-tm tm input))))
 ```
 ```clojure
 {:input 000, :output 000_, :endState :q2, :verdict :accepted}
