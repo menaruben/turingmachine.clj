@@ -5,9 +5,12 @@
 (defrecord Turingmachine [states input-symbols tape-symbols transitions initial-state blank-symbol accepted-states])
 
 (defn valid-word? [word input-symbols]
+  (assert (spec/valid? string? word))
+  (doseq [s input-symbols] (assert (spec/valid? string? s)))
   (every? #(some #{%} input-symbols) word))
 
 (defn get-reached-states [transitions]
+  (doseq [t transitions] (assert Transition (type t)))
   (set (concat (map :source transitions) (map :destination transitions))))
 
 (defn valid-utm? [utm]
@@ -15,9 +18,13 @@
   (every? #(some #{%} (get-reached-states (:transitions utm))) (:states utm)))
 
 (defn find-transition [source read-symbol transitions]
+  (assert (spec/valid? keyword? source))
+  (assert Character (type read-symbol))
+  (doseq [t transitions] (assert Transition (type t)))
   (first (filter #(and (= (:source %) source) (= (:reads %) read-symbol)) transitions)))
 
 (defn print-transition [transition]
+  (assert Transition (type transition))
   (println (str
             "source: " (:source transition)
             ", reads: " (:reads transition)
