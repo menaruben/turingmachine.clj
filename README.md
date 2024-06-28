@@ -52,7 +52,6 @@ We can now successfully *configure* a turingmachine and read a turingmachine vis
 You can find the examples [here](./src/test/tuma/).
 
 ## invert input word
-> This turingmachine configuration is the turingmachine we mentioned above.
 ```clojure
 (ns test.tuma.Invert
   (:require [main.tuma.transition :as trans]
