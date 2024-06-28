@@ -49,14 +49,16 @@ We can then do this for the rest of the transitions and should end up with these
 We can now successfully *configure* a turingmachine and read a turingmachine visualization!
 
 # Examples
-You can find the examples [here](./src/examples/).
+You can find the examples [here](./src/test/tuma/).
 
 ## invert input word
 > This turingmachine configuration is the turingmachine we mentioned above.
 ```clojure
-(load-file "../turingmachine.clj")
-
-(ns turingmachine)
+(ns test.tuma.Invert
+  (:require [main.tuma.transition :as trans]
+            [main.tuma.turingmachine :as tm])
+  (:import [main.tuma.transition Transition])
+  (:import [main.tuma.turingmachine Turingmachine]))
 
 ;; turingmachine which inverts the input word, which must be of length 1 atleast
 (def t1 (Transition. :q1 "_" :q1 "_" :right))
@@ -70,9 +72,9 @@ You can find the examples [here](./src/examples/).
 (def input-symbols (list "0" "1" "_"))
 (def tape-symbols (list "0" "1" "_"))
 (def accepted-states (list :q2))
-(def utm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
+(def tm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
 (def inputs (list "000" "111" "10111011" "0" "1" "" "abc" "___110001"))
-(doseq [input inputs] (println (emulate-utm utm input)))
+(doseq [input inputs] (println (tm/emulate-tm tm input)))
 ```
 ```clojure
 {:input 000, :output 111, :endState :q2, :verdict :accepted}
@@ -87,11 +89,13 @@ You can find the examples [here](./src/examples/).
 
 ## input word must have prefix 00
 ```clojure
-(load-file "../turingmachine.clj")
+(ns test.tuma.PrefixTwoZeros
+  (:require [main.tuma.turingmachine :as tm]
+            [main.tuma.transition])
+  (:import [main.tuma.transition Transition])
+  (:import [main.tuma.turingmachine Turingmachine]))
 
-(ns turingmachine)
-
-;; turingmachine which accepts the language {0^2 1^n | n >= 0}
+;; turingmachine which accepts the language {0^2 1^n | n > 0}
 ;; <=> the language of all binary strings with 00 as the prefix
 (def t1 (Transition. :q1 "0" :q3 "0" :right))
 (def t2 (Transition. :q3 "0" :q2 "0" :right))
@@ -101,10 +105,10 @@ You can find the examples [here](./src/examples/).
 (def input-symbols (list "0" "1" "_"))
 (def tape-symbols (list "0" "1" "_"))
 (def accepted-states (list :q2))
-(def utm (UniversalTuringmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
+(def tm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
 
 (def inputs (list "00111111" "0111" "00"))
-(doseq [input inputs] (println (emulate-utm utm input)))
+(doseq [input inputs] (println (tm/emulate-tm tm input)))
 ```
 ```clojure
 {:input 00111111, :output 00111111, :endState :q2, :verdict :accepted}
@@ -112,3 +116,63 @@ You can find the examples [here](./src/examples/).
 {:input 00, :output 00, :endState :q2, :verdict :accepted}
 ```
 
+## add leading one infront of input
+```clojure
+(ns test.tuma.AddOneInfront
+  (:require [main.tuma.turingmachine :as tm]
+            [main.tuma.transition])
+  (:import [main.tuma.transition Transition])
+  (:import [main.tuma.turingmachine Turingmachine]))
+
+(def t1 (Transition. :q1 "1" :q3 "1" :left))
+(def t2 (Transition. :q1 "0" :q3 "0" :left))
+(def t3 (Transition. :q3 "_" :q2 "1" :left))
+(def transitions (list t1 t2 t3))
+
+(def states (list :q1 :q2 :q3))
+(def input-symbols (list "0" "1"))
+(def tape-symbols (list "0" "1" "_"))
+(def accepted-states (list :q2))
+
+(def tm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
+(def inputs (list "000" "111" "10111011" "0" "1"))
+(doseq [input inputs] (println (tm/emulate-tm tm input)))
+```
+```clojure
+{:input 000, :output 1000, :endState :q2, :verdict :accepted}
+{:input 111, :output 1111, :endState :q2, :verdict :accepted}
+{:input 10111011, :output 110111011, :endState :q2, :verdict :accepted}
+{:input 0, :output 10, :endState :q2, :verdict :accepted}
+{:input 1, :output 11, :endState :q2, :verdict :accepted}
+```
+
+## binary is even
+```clojure
+(ns test.tuma.IsEven
+  (:require [main.tuma.turingmachine :as tm]
+            [main.tuma.transition])
+  (:import [main.tuma.transition Transition])
+  (:import [main.tuma.turingmachine Turingmachine]))
+
+(def t1 (Transition. :q1 "1" :q1 "1" :right))
+(def t2 (Transition. :q1 "0" :q1 "0" :right))
+(def t3 (Transition. :q1 "_" :q3 "_" :left))
+(def t4 (Transition. :q3 "0" :q2 "0" :right))
+(def transitions (list t1 t2 t3 t4))
+
+(def states (list :q1 :q2 :q3))
+(def input-symbols (list "0" "1"))
+(def tape-symbols (list "0" "1" "_"))
+(def accepted-states (list :q2))
+
+(def tm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
+(def inputs (list "000" "111" "10111011" "0" "1"))
+(doseq [input inputs] (println (tm/emulate-tm tm input)))
+```
+```clojure
+{:input 000, :output 000_, :endState :q2, :verdict :accepted}
+{:input 111, :output 111_, :endState :q3, :verdict :rejected}
+{:input 10111011, :output 10111011_, :endState :q3, :verdict :rejected}
+{:input 0, :output 0_, :endState :q2, :verdict :accepted}
+{:input 1, :output 1_, :endState :q3, :verdict :rejected}
+```

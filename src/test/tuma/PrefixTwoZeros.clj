@@ -1,6 +1,8 @@
-(load-file "../turingmachine.clj")
-
-(ns turingmachine)
+(ns test.tuma.PrefixTwoZeros
+  (:require [main.tuma.turingmachine :as tm]
+            [main.tuma.transition])
+  (:import [main.tuma.transition Transition])
+  (:import [main.tuma.turingmachine Turingmachine]))
 
 ;; turingmachine which accepts the language {0^2 1^n | n > 0}
 ;; <=> the language of all binary strings with 00 as the prefix
@@ -12,7 +14,7 @@
 (def input-symbols (list "0" "1" "_"))
 (def tape-symbols (list "0" "1" "_"))
 (def accepted-states (list :q2))
-(def utm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
+(def tm (Turingmachine. states input-symbols tape-symbols transitions :q1 "_" accepted-states))
 
 (def inputs (list "00111111" "0111" "00"))
-(doseq [input inputs] (println (emulate-utm utm input)))
+(doseq [input inputs] (println (tm/emulate-tm tm input)))
