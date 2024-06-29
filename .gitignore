@@ -4,9 +4,9 @@
 ./tuma/target
 ./tuma/classes
 ./tuma/checkouts
-./tumaprofiles.clj
-./tumapom.xml
-./tumapom.xml.asc
+./tuma(profiles.clj
+./tuma/pom.xml
+./tuma/pom.xml.asc
 ./tuma/*.jar
 ./tuma/*.class
 ./tuma/.lein-*
