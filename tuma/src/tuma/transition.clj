@@ -1,4 +1,4 @@
-(ns main.tuma.transition)
+(ns tuma.transition)
 
 (defrecord Transition [source reads destination writes direction])
 
