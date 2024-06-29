@@ -1,3 +1,16 @@
 .clj-kondo/
 .lsp/
 .idea/
+./tuma/target
+./tuma/classes
+./tuma/checkouts
+./tumaprofiles.clj
+./tumapom.xml
+./tumapom.xml.asc
+./tuma/*.jar
+./tuma/*.class
+./tuma/.lein-*
+./tuma/.nrepl-port
+./tuma/.prepl-port
+./tuma/.hgignore
+./tuma/.hg/
