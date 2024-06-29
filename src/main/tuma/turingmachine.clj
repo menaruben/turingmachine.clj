@@ -44,15 +44,15 @@
       :else
       (let [newTape (write-tape tape head-position (:writes transition))
             newHeadPosition (if (= (:direction transition) :right)
-                                (+ head-position 1)
-                                (- head-position 1))]
+                                (inc head-position)
+                                (dec head-position))]
         (recur newTape transitions newHeadPosition (:destination transition) blank-symbol)))))
 
 (defn emulate-tm [tm word]
   (assert (valid-tm? tm) "defined states not matching reached states in transitions!")
   (assert (spec/valid? string? word) "input word must be a string!")
   (cond
-    (true? (valid-word? word (:input-symbols tm)))
+    (valid-word? word (:input-symbols tm))
     {:input word :output :word :endState (:initial-state tm) :verdict :rejected}
 
     :else
