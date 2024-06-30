@@ -5,7 +5,8 @@ A simple way to simulate (deterministic) turingmachines using clojure!
 
 # Definition: Turingmachine
 A turingmachine is defined by the following septuple:
-$$ TM = (Q, \Sigma, \Gamma, \delta, q_0, \square, F) $$
+
+TM = $(Q, \Sigma, \Gamma, \delta, q_0, \square, F)$
 where
 - $Q$ = finite set of states
 - $\Sigma$ = input symbols/alphabet
@@ -29,7 +30,7 @@ $$ Q = \set{q_1, q_2} $$
 
 $$ F = \set{q_2} $$
 
-Since our input words only consist of 0, 1 and _ (blank) and we only write 0, 1 or _ (blank) to the tape we can therefore say:
+Since our input words only consist of 0, 1 and _ (blank) and we are only writing 0, 1 or _ (blank) to the tape we define...
 
 $$ \Sigma = \set{0, 1, \\_} $$
 
