@@ -42,7 +42,7 @@ We may now consider the state transitions. To begin with, we shall examine $q_1$
 
 The notation $0:1,R$ represents a transition in which the system reads 0, writes 1, and then moves to the right on the tape. Given that the initial state is $q_1$ and the final state is $q_2$, this transition can be expressed as follows: $(q_1, 0) = (q_2, 1, R)$.
 This approach can be applied to all transitions, and the resulting expressions can be summarized as follows:
-- $\delta_1(q_1, \\_) = (q_1, \\_, R)$
+- $\delta_1(q_1, \\_ ) = (q_1, \\_ , R)$
 - $\delta_2(q_1, 0) = (q_2, 1, R)$
 - $\delta_3(q_1, 1) = (q_2, 0, R)$
 - $\delta_4(q_2, 0) = (q_2, 1, R)$
