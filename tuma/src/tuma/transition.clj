@@ -1,7 +1,8 @@
-(ns tuma.transition)
+(ns tuma.transition
+  (:require [tuma.predicates :as preds]))
 
-(defrecord Transition [source reads destination writes direction])
+(defrecord -transition [source reads destination writes direction])
 
-(defn get-reached-states [transitions]
-  (doseq [t transitions] (assert Transition (type t)))
-  (set (concat (map :source transitions) (map :destination transitions))))
+(defn new-transition [source reads destination writes direction]
+  (assert (preds/valid-transition? source reads destination writes direction))
+  (-transition. source reads destination writes direction))

@@ -1,15 +1,16 @@
 (ns tuma.turingmachine
-  (:require [clojure.spec.alpha :as spec])
-  (:require [tuma.transition :as trans])
-  (:require [tuma.predicates :as preds])
-  (:import [tuma.transition Transition]))
+  (:require [tuma.predicates :as preds]
+            [tuma.messages :as msg]))
 
-(defrecord Turingmachine [states input-symbols tape-symbols transitions initial-state blank-symbol accepted-states])
+(defrecord -turingmachine [states input-symbols tape-symbols transitions initial-state blank-symbol accepted-states])
+
+(defn new-turingmachine [states input-symbols tape-symbols transitions initial-state blank-symbol accepted-states]
+  (assert (preds/valid-tm? states input-symbols tape-symbols transitions initial-state blank-symbol accepted-states))
+  (-turingmachine. states input-symbols tape-symbols transitions initial-state blank-symbol accepted-states))
 
 (defn- find-transition [source read-symbol transitions]
-  (assert (spec/valid? keyword? source))
+  (assert (keyword? source))
   (assert Character (type read-symbol))
-  (doseq [t transitions] (assert Transition (type t)))
   (first (filter #(and (= (:source %) source) (= (:reads %) read-symbol)) transitions)))
 
 (defn- write-tape [tape head-position symbol]
@@ -41,8 +42,8 @@
   {:input input :output output :end-state end-state :verdict verdict})
 
 (defn emulate-tm [tm word]
-  (assert (preds/valid-tm? (:transitions tm) (:states tm)) "defined states not matching reached states in transitions!")
-  (assert (spec/valid? string? word) "input word must be a string!")
+  (assert (= (type tm) -turingmachine) (msg/format-not-expected-type tm "Turingmachine"))
+  (assert (string? word) (msg/format-not-expected-type word "string"))
   (cond
     (preds/valid-word? word (:input-symbols tm))
     (get-result word word (:initial-state tm) :rejected)
@@ -52,4 +53,3 @@
       (if (contains? (set (:accepted-states tm)) (:current-state result))
         (get-result word (:tape result) (:current-state result) :accepted)
         (get-result word (:tape result) (:current-state result) :rejected)))))
-
