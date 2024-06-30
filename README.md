@@ -1,7 +1,7 @@
 # turingmachine.clj
 A simple way to simulate (deterministic) turingmachines using clojure!
 
-> Note that I would like to optimize this repository and also make use of the "gödel number" in the future. This is just a simple implementation.
+> Note that I would like to make use of the "gödel number" in the future. This is just a simple implementation.
 
 # Definition: Turingmachine
 A turingmachine is defined by the following septuple:
@@ -16,9 +16,9 @@ where
 - $\square$ = the "blank" symbol
 - $F$ = the set of accepted states
 
-The turingmachine has a tape which can be infinite in both directions. We are also only allowed to move a step to the left or right.
+The Turing machine is equipped with a tape that can be extended in both directions without limit. It is also necessary to note that the machine is only permitted to advance a single step in either direction.
 
-Let's assume that we have the following turingmachine:
+For the sake of simplicity, let us consider the following Turing machine:
 
 ![](./imgs/tm_example1.png)
 
@@ -42,7 +42,7 @@ We may now consider the state transitions. To begin with, we shall examine $q_1$
 
 The notation $0:1,R$ represents a transition in which the system reads 0, writes 1, and then moves to the right on the tape. Given that the initial state is $q_1$ and the final state is $q_2$, this transition can be expressed as follows: $(q_1, 0) = (q_2, 1, R)$.
 This approach can be applied to all transitions, and the resulting expressions can be summarized as follows:
-- $\delta_1(q_1, \\_) = (q_1, \_, R)$
+- $\delta_1(q_1, \\_) = (q_1, \\_, R)$
 - $\delta_2(q_1, 0) = (q_2, 1, R)$
 - $\delta_3(q_1, 1) = (q_2, 0, R)$
 - $\delta_4(q_2, 0) = (q_2, 1, R)$
