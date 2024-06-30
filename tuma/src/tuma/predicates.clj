@@ -7,11 +7,11 @@
   (doseq [s input-symbols] (assert (string? s)))
   (every? #(some #{%} input-symbols) word))
 
-(defn -get-reached-states [transitions]
+(defn- get-reached-states [transitions]
   (set (concat (map :source transitions) (map :destination transitions))))
 
 (defn- all-reached-states-defined? [transitions states]
-  (= (-get-reached-states transitions) (set states)))
+  (= (get-reached-states transitions) (set states)))
 
 (defn valid-tm-transition?
   "Validates a transition for a Turing machine for specific tape-symbols and states of the machine."
