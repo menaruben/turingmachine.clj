@@ -50,7 +50,30 @@ This approach can be applied to all transitions, and the resulting expressions c
 
 We have successfully configured a Turing machine and read a Turing machine visualization.
 
+# Gödel number and universal turing machines
+The Gödel number is a method of encoding the transition of a Turing machine as a binary number.
+Universal Turing machines are capable of simulating any Turing machine, although there are a few fundamental rules that must be observed.
+The initial state is always $q_1$, never $q_0$. $q_1$ is also the initial state.
+The third symbol of the tape symbols is always the blank symbol.
+The only accepted state is $q_2$. 
+
+For the sake of argument, let us assume that we have the tape symbols $[0, 1, \\_]$ and the transition $(q_1, 0) = (q_2, 1, R)$. 
+If we were to examine each element of this transition equation, we could encode it as follows: 
+1. $q_1$ is represented by the digit 0, as $q_n$ is represented by a string of n zeros.
+2. The digit 0 is the first symbol of the tape symbols, and therefore it is encoded as 0. The number of zeros is equivalent to the index of the symbol in the tape symbols.
+3. $q_2$ is encoded as $00$, as previously stated.
+4. $1$ is encoded as $00$ because it is the second symbol of the tape symbols.
+5. $R$ (right) is encoded as $00$; $L$ (left) would be encoded as $0$.
+If we combine all of these encodings and separate them with $1$, we should obtain the following result:
+$=> 010100100100$
+
+If we had more transitions we would separate them with $11$.
+
+Should we attempt to encode this Turing machine, we would obtain the following Gödel number: $010010100100110101010100110100010001000101100010010001010110001010010010$
+![image](https://github.com/menaruben/turingmachine.clj/assets/74914224/6ebd6b0e-b062-4267-9f93-7177c491712c)
+
 # Examples
+## regular turing machine
 > You can find some examples [here](./tuma/test/tuma/examples.clj).
 
 The following example illustrates the process of adding one to a binary number using a Turing machine.
@@ -91,3 +114,25 @@ source: :q3 reads: 1 destination: :q3 writes: 0 direction: :left
 source: :q3 reads: 0 destination: :q2 writes: 1 direction: :left
 {:input 10011, :output 10100_, :end-state :q2, :verdict :accepted}
 ```
+
+## universal turing machine
+```clojure
+(ns tuma.core
+  (:require [tuma.universal-turingmachine :as utm]))
+
+(defn -main []
+  (let [goedel (str
+                "01001010010011"      ; <=> :q1 "1" :q1 "1" :right
+                "010101010011"        ; <=> :q1 "0" :q1 "0" :right
+                "01000100010001011"   ; <=> :q1 "_" :q3 "_" :left
+                "0001001000101011"    ; <=> :q3 "1" :q3 "0" :left
+                "0001010010010")      ; <=> :q3 "0" :q2 "1" :left
+        utm (utm/new-utm goedel ["0" "1" "_"] ["0" "1" "_"])
+        input "10011"
+        result (utm/emulate-utm utm input)]
+    (println result)))
+```
+```clojure
+{:input 10011, :output 10100_, :end-state :q2, :verdict :accepted}
+```
+The `emulate-utm` function also has the ability to use the `trace?` parameter as mentioned in the example above. 
