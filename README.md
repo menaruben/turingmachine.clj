@@ -23,7 +23,7 @@ Let's assume that we have the following turingmachine:
 ![](./imgs/tm_example1.png)
 
 This turingmachine only accepts words/inputs which are atleast 1 character long and start with 0 or 1 (ignores the blanks at the beginning).
-All of the accepted states are typically circled twice. In this example we only have one accepted state which is $q_2$.
+All accepted states are usually circled twice. In this example we have only one accepted state, which is $q_2$.
 $q_1$ on the other hand is the initial state which means:
 
 $$ Q = \set{q_1, q_2} $$
@@ -38,29 +38,29 @@ $$ \Gamma = \set{0, 1, \\_} $$
 
 $$ \square = \\_ $$
 
-Now we can take a look at the state transitions. Let's start with $q_1$:
-$$0:1,R$$ means "reads 0, writes 1, goes right". Since we start at $q_1$ and end at $q_2$ with this transition we can write it as such: $$(q_1, 0) = (q_2, 1, R)$$
-We can then do this for the rest of the transitions and should end up with these...
+We may now consider the state transitions. To begin with, we shall examine $q_1$.
+
+The notation $0:1,R$ represents a transition in which the system reads 0, writes 1, and then moves to the right on the tape. Given that the initial state is $q_1$ and the final state is $q_2$, this transition can be expressed as follows: $(q_1, 0) = (q_2, 1, R)$.
+This approach can be applied to all transitions, and the resulting expressions can be summarized as follows:
 - $\delta_1(q_1, \\_) = (q_1, \_, R)$
 - $\delta_2(q_1, 0) = (q_2, 1, R)$
 - $\delta_3(q_1, 1) = (q_2, 0, R)$
 - $\delta_4(q_2, 0) = (q_2, 1, R)$
 - $\delta_5(q_2, 1) = (q_2, 0, R)$
 
-We can now successfully *configure* a turingmachine and read a turingmachine visualization!
+We have successfully configured a Turing machine and read a Turing machine visualization.
 
 # Examples
-You can find some examples in the [core test](./tuma/test/tuma/core_test.clj).
+> You can find some examples [here](./tuma/test/tuma/examples.clj).
 
-Here is a basic example for adding one to a binary number:
+The following example illustrates the process of adding one to a binary number using a Turing machine.
 ```clojure
-(ns tuma.core-test
-  (:require [clojure.test :refer :all]
-            [tuma.turingmachine :as tm]
+(ns tuma.core
+  (:require [tuma.turingmachine :as tm]
             [tuma.transition :as trans]))
 
-(deftest binary-add-by-one
-  (testing "binary add by one turingmachine")
+(defn -main []
+  ; turingmachine that adds one to a binary number and traces the transitions
   (let [t1 (trans/new-transition :q1 "1" :q1 "1" :right)
         t2 (trans/new-transition :q1 "0" :q1 "0" :right)
         t3 (trans/new-transition :q1 "_" :q3 "_" :left)
@@ -73,7 +73,21 @@ Here is a basic example for adding one to a binary number:
         accepted-states [:q2]
         tm (tm/new-turingmachine states input-symbols tape-symbols transitions :q1 "_" accepted-states)
         input "10011"
-        expected {:input input :output "10100_" :end-state :q2 :verdict :accepted}
-        actual (tm/emulate-tm tm input)]
-    (is (= expected actual) (str "actual: " actual))))
+        result (tm/emulate-tm tm input true)]
+    (println result)))
+```
+One may either invoke the `emulate-tm` function with three parameters (turingmachine, input trace?) or with two parameters (turingmachine, input). This allows the user to specify whether or not they wish to have the transitions printed out. In the event that they do not wish to utilise this functionality, it is possible to simply omit the `trace?` parameter.
+
+In the aforementioned example, the value of the 'trace?' parameter was set to 'true', resulting in the following output on the terminal:
+```clj
+source: :q1 reads: 1 destination: :q1 writes: 1 direction: :right
+source: :q1 reads: 0 destination: :q1 writes: 0 direction: :right
+source: :q1 reads: 0 destination: :q1 writes: 0 direction: :right
+source: :q1 reads: 1 destination: :q1 writes: 1 direction: :right
+source: :q1 reads: 1 destination: :q1 writes: 1 direction: :right
+source: :q1 reads: _ destination: :q3 writes: _ direction: :left
+source: :q3 reads: 1 destination: :q3 writes: 0 direction: :left
+source: :q3 reads: 1 destination: :q3 writes: 0 direction: :left
+source: :q3 reads: 0 destination: :q2 writes: 1 direction: :left
+{:input 10011, :output 10100_, :end-state :q2, :verdict :accepted}
 ```

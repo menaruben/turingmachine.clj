@@ -8,3 +8,10 @@
 
 (defn format-invalid-type-of [typestring]
   (str "invalid " typestring "!"))
+
+(defn format-transition [transition]
+  (str "source: " (:source transition)
+       " reads: " (:reads transition)
+       " destination: " (:destination transition)
+       " writes: " (:writes transition)
+       " direction: " (:direction transition)))

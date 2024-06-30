@@ -1,4 +1,4 @@
-(ns tuma.core-test
+(ns tuma.examples
   (:require [clojure.test :refer :all]
             [tuma.turingmachine :as tm]
             [tuma.transition :as trans]))
