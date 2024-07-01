@@ -1,7 +1,5 @@
 # turingmachine.clj
-A simple way to simulate (deterministic) turingmachines using clojure!
-
-> Note that I would like to make use of the "gödel number" in the future. This is just a simple implementation.
+A simple way to simulate (deterministic) (universal) turingmachines using clojure!
 
 # Definition: Turingmachine
 A turingmachine is defined by the following septuple:
